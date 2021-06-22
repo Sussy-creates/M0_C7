@@ -25,19 +25,14 @@ def add_employee_record(id_num, name, city):
     city   -- City of employee. Cannot be empty
     """
 
-    # If ID already exists, return False
-    if id_num in names or id_num in cities:
+    # If ID already exists, or if name or city empty return error
+    if id_num in names or id_num in cities or not name or not city:
         return False
-
-    # If name or city are empty, return False
-    if not name or not city:
-        return False
-
+    else:
     # Otherwise create the dictionary pairs
-    names[id_num] = name
-    cities[id_num] = name
-
-    return True
+        names[id_num] = name
+        cities[id_num] = city
+        return True
 
 def edit_employee_record(id_num, name, city):
     """Edits an employee record if it exists.
@@ -49,10 +44,10 @@ def edit_employee_record(id_num, name, city):
     """
     if not id_num in names or not id_num in cities:
         return False
-
-    cities[id_num] = city
-
-    return True
+    else:
+        if name: names[id_num] = name
+        if city: cities[id_num] = city
+        return True
 
 def get_employee_record(id_num):
     """Gets an employee's details if record exists.
@@ -61,9 +56,9 @@ def get_employee_record(id_num):
     id_num -- ID of employee record to fetch
     """
     if not id_num in names or not id_num in cities:
-        return 'Hubba bubba'
-
-    return f'{id_num} {names[id_num]} {cities[id_num]}'
+        return False
+    else:
+        return f'{id_num} {names[id_num]} {cities[id_num]}'
 
 def remove_employee_record(id_num):
     """Deletes an employee's records if they exist.
@@ -73,14 +68,11 @@ def remove_employee_record(id_num):
     """
     if id_num in names:
         del cities[id_num]
+        if id_num in cities:
+            del cities[id_num]
+        return True 
     else:
         return False
-    if id_num in cities:
-        del cities[id_num]
-    else:
-        return False
-
-    return True
 
 if __name__ == '__main__':
     print(usage)
@@ -98,7 +90,7 @@ if __name__ == '__main__':
                     name = input('Name << ')
                     city = input('City << ')
                     # Hint: Look up python ternary
-                    print('>> Record addeded' if add_employee_record(id_num, name, city) else '>> Error adding record')
+                    print('>> Record added' if add_employee_record(id_num, name, city) else '>> Error adding record')
                 elif cmd_arr[0] == 'edit':
                     name = input('Name << ')
                     city = input('City << ')
@@ -107,10 +99,10 @@ if __name__ == '__main__':
                     result = get_employee_record(id_num)
                     print(f'>> {result}' if result else '>> Error viewing record')
                 elif cmd_arr[0] == 'remove':
-                    print('>> Record deleted' if remove_employee_record(id_num) else '>> Error removing record')
+                    print('>> Record removed' if remove_employee_record(id_num) else '>> Error removing record')
                 else:
                     print(err)
             except ValueError:
-                print('>> Invalid id')
+                print('>> Invalid ID')
         else:
             print('>> Invalid command')
